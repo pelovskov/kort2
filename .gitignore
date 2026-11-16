@@ -1,0 +1,6 @@
+# Lokale filer der aldrig må i git
+.DS_Store
+error_log
+*.log
+config.php
+_arkiv/

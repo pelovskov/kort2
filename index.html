@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>De glemte butikker i Roskilde</title>
+<meta name="description" content="Søg i Roskildes glemte butikker – købmænd, bagere, radioforretninger og meget mere – på liste og kort.">
+<!--
+  De glemte butikker – statisk side (ingen PHP).
+
+  DATA:      data.json i samme mappe. Ret i den og læg filen op igen.
+  RETTELSER: Stavevarianter af gader og brancher samles i js/app.js
+             (GADE_RETTELSER, BRANCHE_RETTELSER, OMRAADER).
+  ERINDRINGER: Skriv en mailadresse i KONTAKT_EMAIL i js/app.js, så virker
+             knappen "Kan du huske butikken?".
+  LOKALT:    Siden skal vises via en webserver (fx `python3 -m http.server`),
+             ikke ved at dobbeltklikke på filen.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="fascia">
+  <div class="fascia-inner">
+    <h1>De glemte butikker</h1>
+    <p id="undertitel">Købmænd, bagere og radioforretninger fra Roskildes gader</p>
+  </div>
+</header>
+
+<main>
+  <div class="search" role="search">
+    <label for="q" class="sr">Søg</label>
+    <input id="q" type="search" placeholder="Søg – fx »bager Algade«" autocomplete="off">
+    <button type="button" class="btn filterbtn" id="filterBtn" aria-expanded="false" aria-controls="filterpanel">Filtre</button>
+  </div>
+
+  <div class="filterpanel" id="filterpanel">
+  <div class="filters">
+    <div class="field">
+      <label for="gade">Gade</label>
+      <select id="gade"></select>
+    </div>
+    <div class="field">
+      <label for="branche">Branche</label>
+      <select id="branche"></select>
+    </div>
+    <div class="field small">
+      <label for="aarti">Årti</label>
+      <select id="aarti"></select>
+    </div>
+    <div class="field small">
+      <label for="sort">Sortér efter</label>
+      <select id="sort">
+        <option value="navn">Navn</option>
+        <option value="gade">Gade og husnummer</option>
+        <option value="aar">Årstal</option>
+      </select>
+    </div>
+    <div class="checks">
+      <label><input type="checkbox" id="foto"> Kun med billede</label>
+      <label><input type="checkbox" id="kort"> Kun dem på kortet</label>
+      <label><input type="checkbox" id="todo"> Mangler oplysninger</label>
+    </div>
+  </div>
+
+    <div class="chiprow" id="brancheChips"><h2>Brancher</h2></div>
+  </div>
+
+  <div class="status">
+    <div class="count" id="count" aria-live="polite"></div>
+    <div class="actions">
+      <button class="btn" id="tilfaeldig" type="button">Vis en tilfældig butik</button>
+      <button class="btn" id="nulstil" type="button">Nulstil</button>
+    </div>
+  </div>
+
+  <div class="viewtoggle" role="group" aria-label="Visning">
+    <button type="button" id="visListe" aria-pressed="true">Liste</button>
+    <button type="button" id="visKort" aria-pressed="false">Kort</button>
+  </div>
+
+  <div class="layout" id="layout" data-view="list">
+    <div class="listwrap">
+      <ul class="list" id="list"></ul>
+      <button class="btn more" id="more" type="button" hidden>Vis flere</button>
+    </div>
+    <div class="mapwrap"><div id="map"></div><div class="mapnote" id="mapnote"></div></div>
+  </div>
+</main>
+
+<dialog id="dlg" aria-labelledby="dTitle">
+  <div class="d-head">
+    <h2 id="dTitle"></h2>
+    <p id="dSub"></p>
+    <button class="d-close" id="dClose" type="button" aria-label="Luk">×</button>
+  </div>
+  <div class="d-body" id="dBody"></div>
+</dialog>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="js/app.js"></script>
+</body>
+</html>

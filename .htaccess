@@ -1,0 +1,33 @@
+# De glemte butikker – statisk side. Kræver Apache (mod_headers/mod_rewrite hvis de findes).
+
+Options -Indexes
+DirectoryIndex index.html
+
+# Tving HTTPS
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Ingen PHP, skjulte filer, logs eller arkiv må hentes – siden er rent statisk
+<FilesMatch "(\.(php|phtml|log|md|bak|tmp)$|^\.|^error_log$)">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /(_arkiv|\.git)(/|$)
+
+<IfModule mod_headers.c>
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self' https://unpkg.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), payment=(), geolocation=(self)"
+  Header always set X-Frame-Options "DENY"
+
+  # data.json skal altid tjekkes for nyt indhold
+  <FilesMatch "\.json$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+AddType application/json .json
+AddDefaultCharset utf-8
