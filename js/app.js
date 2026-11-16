@@ -141,17 +141,28 @@ function tegnListe(res){
 function tegnKort(res){
   if (!map) return;
   layer.clearLayers(); markers.clear();
-  const pts = [];
+  const pts = [], nye = [];
   for (const b of res){
     if (b.lat===null) continue;
     const m = L.circleMarker([b.lat,b.lng], {
       radius:8, weight:2, color:"#1b3a2d", fillColor: b.ca ? "#e9d7a8" : "#c79a3a", fillOpacity:.95, dashArray: b.ca?"3 3":null
     }).bindTooltip(esc(b.navn)).on("click", ()=>aabn(b.id));
-    m.addTo(layer); markers.set(b.id,m); pts.push([b.lat,b.lng]);
+    nye.push(m); markers.set(b.id,m); pts.push([b.lat,b.lng]);
   }
+  layer.addLayers ? layer.addLayers(nye) : nye.forEach(m=>m.addTo(layer));
   const uden = res.filter(b=>b.lat===null).length;
   $("#mapnote").textContent = `${pts.length} på kortet` + (uden?`, ${uden} mangler placering`:"");
-  if (pts.length) map.fitBounds(pts, {padding:[30,30], maxZoom:17});
+  kortGraenser = pts.length ? L.latLngBounds(pts) : null;
+  tilpasKort();
+}
+// Zoom så alle viste markører er med. Er kortet skjult (fx Liste-visning på
+// telefon), gemmes det til kortet bliver vist – ellers bliver zoomen forkert.
+let kortGraenser = null, skalTilpasse = false;
+function tilpasKort(){
+  if (!map || !kortGraenser) return;
+  if (!map.getContainer().offsetWidth){ skalTilpasse = true; return; }
+  map.fitBounds(kortGraenser, {padding:[30,30], maxZoom:17, animate:false});
+  skalTilpasse = false;
 }
 
 function opdater(nulstilSide=true){
@@ -194,8 +205,16 @@ function aabn(id){
     </div>`;
   const vis = $("#dVis");
   if (vis) vis.onclick = () => {
-    $("#dlg").close(); saetVisning("map");
-    if (map){ map.setView([b.lat,b.lng],18); const m=markers.get(b.id); if(m) m.openTooltip(); }
+    $("#dlg").close();
+    saetVisning("map", () => {
+      const m = markers.get(b.id);
+      map.setView([b.lat,b.lng], 18, {animate:false});
+      if (!m) return;
+      if (map.hasLayer(m)) { m.openTooltip(); return; }
+      // Flere butikker på samme adresse: fold klyngen ud og vis butikken
+      const p = layer.getVisibleParent && layer.getVisibleParent(m);
+      if (p && p.spiderfy){ p.spiderfy(); setTimeout(() => m.openTooltip(), 350); }
+    });
   };
   $("#dLink").onclick = async (ev) => {
     const url = location.href.split("#")[0] + "#butik=" + encodeURIComponent(b.id);
@@ -244,10 +263,13 @@ $("#list").onclick = e => { const b = e.target.closest("[data-id]"); if (b) aabn
 $("#more").onclick = () => { vist += PR_SIDE; opdater(false); };
 $("#nulstil").onclick = () => { Object.assign(F,{q:"",gade:"",branche:"",aarti:"",foto:false,kort:false,todo:false,sort:"navn"}); $("#q").value=""; $("#sort").value="navn"; for (const k of ["foto","kort","todo"]) $("#"+k).checked=false; opdater(); };
 $("#tilfaeldig").onclick = () => { const res = BUTIKKER.filter(b=>passer(b)); const pool = res.length?res:BUTIKKER; aabn(pool[Math.floor(Math.random()*pool.length)].id); };
-function saetVisning(v){
+function saetVisning(v, derefter){
   $("#layout").dataset.view = v;
   $("#visListe").setAttribute("aria-pressed", v==="list"); $("#visKort").setAttribute("aria-pressed", v==="map");
-  if (map && v==="map") setTimeout(()=>map.invalidateSize(), 50);
+  if (map && v==="map") setTimeout(() => {
+    map.invalidateSize({pan:false});
+    if (derefter) derefter(); else if (skalTilpasse) tilpasKort();
+  }, 50);
 }
 $("#filterBtn").onclick = () => {
   const aaben = $("#filterpanel").classList.toggle("open");
@@ -262,7 +284,14 @@ function startKort(){
   map = L.map("map", { scrollWheelZoom:true }).setView([55.6415,12.0803], 14);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19,
     attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-  layer = L.layerGroup().addTo(map);
+  // Klynger samler markører, der ligger tæt; antallet står i cirklen.
+  layer = (L.markerClusterGroup ? L.markerClusterGroup({
+    showCoverageOnHover:false, maxClusterRadius:45, spiderfyOnMaxZoom:true,
+    iconCreateFunction: c => {
+      const n = c.getChildCount(), str = n < 10 ? "s" : n < 50 ? "m" : "l";
+      return L.divIcon({ html:`<span>${n}</span>`, className:`klynge klynge-${str}`, iconSize:null });
+    }
+  }) : L.layerGroup()).addTo(map);
 }
 async function hentData(){
   const r = await fetch("data.json", {cache:"no-cache"});

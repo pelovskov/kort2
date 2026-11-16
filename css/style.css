@@ -75,6 +75,12 @@ main{max-width:1280px;margin:0 auto;padding:22px 20px 60px}
 
 .mapwrap{position:sticky;top:12px;height:calc(100vh - 24px);max-height:760px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;background:var(--chip)}
 #map{height:100%;width:100%}
+/* Klynger af markører */
+.klynge{display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--brass);color:#1b3a2d;
+  border:3px solid #1b3a2d;box-shadow:0 0 0 4px rgba(199,154,58,.35);font-family:var(--font-sign);font-weight:700;line-height:1}
+.klynge-s{width:34px;height:34px;margin:-17px 0 0 -17px;font-size:1rem}
+.klynge-m{width:42px;height:42px;margin:-21px 0 0 -21px;font-size:1.1rem}
+.klynge-l{width:52px;height:52px;margin:-26px 0 0 -26px;font-size:1.25rem}
 .mapnote{position:absolute;left:10px;bottom:10px;z-index:500;background:var(--card);border:1px solid var(--line);padding:4px 10px;border-radius:4px;font-size:.9rem}
 .nomap{padding:20px}
 
