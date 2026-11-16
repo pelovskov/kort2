@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin – De glemte butikker</title>
+<!--
+  Lokal admin til data.json. Skal IKKE lægges på webhotellet.
+  Brug: dobbeltklik på denne fil, tryk "Åbn data.json", ret, og tryk "Gem data.json".
+  Upload derefter den gemte data.json til webhotellet.
+-->
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header class="top">
+  <h1>Glemte butikker – admin</h1>
+  <div class="filinfo" id="filinfo">Ingen fil åbnet</div>
+  <div class="topknapper">
+    <button type="button" id="aabnFil">Åbn data.json</button>
+    <input type="file" id="filvaelger" accept=".json,application/json" hidden>
+    <button type="button" id="gemFil" class="primaer" disabled>Gem data.json</button>
+  </div>
+</header>
+
+<main class="layout">
+  <section class="venstre" aria-label="Butikker">
+    <div class="soeg">
+      <label for="q" class="sr">Søg</label>
+      <input id="q" type="search" placeholder="Søg i navn, gade, tags …" autocomplete="off">
+      <button type="button" id="ny" class="primaer" disabled>+ Ny butik</button>
+    </div>
+    <div class="filtre">
+      <label><input type="checkbox" id="kunUdenKoord"> Mangler koordinater</label>
+      <label><input type="checkbox" id="kunAendret"> Kun ændrede</label>
+      <select id="sortering" aria-label="Sortering">
+        <option value="navn">Sortér: navn</option>
+        <option value="gade">Sortér: gade</option>
+        <option value="nyeste">Sortér: nyeste først</option>
+      </select>
+    </div>
+    <div class="antal" id="antal" aria-live="polite"></div>
+    <ul class="liste" id="liste"></ul>
+  </section>
+
+  <section class="hoejre" aria-label="Redigér">
+    <div class="tom" id="tom">
+      <p>Åbn <b>data.json</b> for at komme i gang. Vælg derefter en butik i listen, eller tryk <b>+ Ny butik</b>.</p>
+    </div>
+
+    <form id="form" hidden novalidate>
+      <h2 id="formTitel">Redigér butik</h2>
+      <p class="id" id="formId"></p>
+
+      <label>Navn <span class="kraevet">*</span>
+        <input name="navn" required>
+      </label>
+
+      <label>Beskrivelse
+        <textarea name="beskrivelse" rows="7"></textarea>
+      </label>
+
+      <label>Tags <small>kommasepareret, fx #Bager, #Algade – skriv #todo hvis der mangler oplysninger</small>
+        <input name="tags">
+      </label>
+
+      <div class="raekke">
+        <label class="bred">Vej <input name="vej"></label>
+        <label class="smal">Husnr <input name="husnr"></label>
+        <label>Postnr og by <input name="postnr_by"></label>
+      </div>
+
+      <div class="raekke">
+        <label>Periode start <small>årstal</small> <input name="periode_start" inputmode="numeric"></label>
+        <label>Periode slut <small>årstal</small> <input name="periode_slut" inputmode="numeric"></label>
+      </div>
+
+      <div class="raekke">
+        <label class="bred">Koordinater <small>"55.6xxxx, 12.0xxxx" – højreklik i Google Maps og kopiér</small>
+          <input name="koordinater" placeholder="55.641500, 12.080300">
+        </label>
+        <label class="flueben"><input type="checkbox" name="koordinat_ca"> Omtrentlig placering</label>
+      </div>
+
+      <label>Billede-URL <input name="billede_url" type="url" placeholder="https://…"></label>
+      <div class="billede" id="billede" hidden><img id="billedeImg" alt="Forhåndsvisning af billede"></div>
+      <label>Mere info-URL <input name="mere_info_url" type="url" placeholder="https://…"></label>
+      <label>Lyd-URL (.mp3) <input name="lyd_url" type="url" placeholder="https://…"></label>
+
+      <ul class="fejl" id="fejl" hidden></ul>
+
+      <div class="formknapper">
+        <button type="submit" class="primaer">Gem ændringer</button>
+        <button type="button" id="fortryd">Fortryd</button>
+        <button type="button" id="slet" class="farlig">Slet butik</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<div class="besked" id="besked" role="status" hidden></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

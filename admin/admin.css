@@ -1,0 +1,76 @@
+:root{
+  --gron:#234a3a; --messing:#c79a3a; --papir:#f7f7f3; --kort:#fff; --blaek:#1d1f1e;
+  --graa:#5d655f; --linje:#d8ddd6; --chip:#eef2ed; --roed:#a33a25; --roed-bg:#fbe9e5; --fokus:#1f6fd1;
+  --aendret:#c79a3a;
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--papir);color:var(--blaek)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--fokus);outline-offset:1px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+.top{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;
+  padding:10px 16px;background:var(--gron);color:#fff}
+.top h1{margin:0;font-size:1.15rem;color:var(--messing)}
+.filinfo{flex:1;font-size:.9rem;opacity:.9}
+.filinfo .ugemt{background:var(--messing);color:var(--blaek);padding:1px 8px;border-radius:4px;margin-left:6px;font-weight:600}
+.topknapper{display:flex;gap:8px}
+
+button{border:1px solid var(--linje);background:var(--kort);border-radius:6px;padding:7px 13px;cursor:pointer}
+button:hover:not(:disabled){border-color:var(--blaek)}
+button:disabled{opacity:.45;cursor:default}
+button.primaer{background:var(--messing);border-color:var(--messing);color:var(--blaek);font-weight:600}
+button.farlig{color:var(--roed);border-color:var(--roed)}
+button.farlig:hover{background:var(--roed);color:#fff}
+
+.layout{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:16px;padding:16px;max-width:1400px;margin:0 auto}
+.venstre{display:flex;flex-direction:column;min-height:0;height:calc(100vh - 90px);position:sticky;top:70px}
+.soeg{display:flex;gap:8px}
+.soeg input{flex:1;min-width:0;padding:8px 10px;border:1px solid var(--linje);border-radius:6px;background:var(--kort)}
+.filtre{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin:8px 0;font-size:.9rem}
+.filtre label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.filtre select{margin-left:auto;padding:4px 6px;border:1px solid var(--linje);border-radius:6px;background:var(--kort)}
+.antal{font-size:.85rem;color:var(--graa);margin-bottom:4px}
+.liste{list-style:none;margin:0;padding:0;overflow-y:auto;flex:1;border:1px solid var(--linje);border-radius:6px;background:var(--kort)}
+.liste li{border-bottom:1px solid var(--linje)}
+.liste button{all:unset;box-sizing:border-box;display:block;width:100%;padding:8px 10px;cursor:pointer;border-left:4px solid transparent}
+.liste button:hover{background:var(--chip)}
+.liste button[aria-current="true"]{background:var(--chip);border-left-color:var(--gron)}
+.liste button:focus-visible{outline:3px solid var(--fokus);outline-offset:-3px}
+.liste .n{font-weight:600}
+.liste .m{font-size:.85rem;color:var(--graa)}
+.maerke{display:inline-block;font-size:.72rem;padding:0 6px;border-radius:3px;margin-left:6px;vertical-align:1px;font-weight:600}
+.maerke.aendret{background:var(--aendret);color:var(--blaek)}
+.maerke.ny{background:var(--gron);color:#fff}
+.maerke.koord{background:var(--roed-bg);color:var(--roed)}
+
+.hoejre{background:var(--kort);border:1px solid var(--linje);border-radius:8px;padding:18px 20px;min-height:300px}
+.tom{color:var(--graa)}
+form h2{margin:0;font-size:1.25rem}
+.id{margin:2px 0 14px;font-size:.8rem;color:var(--graa)}
+form label{display:block;font-weight:600;font-size:.9rem;margin-bottom:12px}
+form label small{font-weight:400;color:var(--graa);margin-left:4px}
+form input:not([type=checkbox]),form textarea{display:block;width:100%;margin-top:4px;padding:7px 9px;border:1px solid var(--linje);border-radius:6px;background:#fff;font-weight:400}
+form textarea{resize:vertical}
+form [aria-invalid="true"]{border-color:var(--roed);background:var(--roed-bg)}
+.kraevet{color:var(--roed)}
+.raekke{display:flex;flex-wrap:wrap;gap:0 12px}
+.raekke>label{flex:1 1 150px}
+.raekke>label.bred{flex:2 1 240px}
+.raekke>label.smal{flex:0 1 90px}
+label.flueben{display:flex;align-items:center;gap:8px;align-self:center;margin-top:14px;font-weight:400}
+label.flueben input{width:18px;height:18px}
+.billede{margin:-4px 0 12px}
+.billede img{max-width:260px;max-height:180px;border-radius:4px;border:1px solid var(--linje)}
+.fejl{margin:0 0 12px;padding:10px 14px 10px 30px;background:var(--roed-bg);color:var(--roed);border-radius:6px;font-size:.9rem}
+.formknapper{display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid var(--linje);padding-top:14px}
+.formknapper .farlig{margin-left:auto}
+
+.besked{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--blaek);color:#fff;padding:10px 18px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:20}
+
+@media (max-width:800px){
+  .layout{grid-template-columns:1fr}
+  .venstre{position:static;height:45vh}
+}
+.top button:not(.primaer){background:transparent;border-color:rgba(255,255,255,.6);color:#fff}
+.top button:not(.primaer):hover{border-color:#fff;background:rgba(255,255,255,.1)}
