@@ -1,0 +1,12 @@
+{
+  "indstillinger": {
+    "titel": "Mit kort",
+    "undertitel": "",
+    "intro": "",
+    "accentfarve": "#2f6f5e",
+    "rute": false,
+    "startpunkt": "55.6415, 12.0803",
+    "startzoom": 13
+  },
+  "steder": []
+}

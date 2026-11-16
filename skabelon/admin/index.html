@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin</title>
+<!--
+  Lokal admin til data.json. Skal IKKE lægges online.
+  Dobbeltklik på denne fil, tryk "Åbn data.json", ret, og tryk "Gem data.json".
+-->
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<header class="top">
+  <h1 id="adminTitel">Admin</h1>
+  <div class="filinfo" id="filinfo">Ingen fil åbnet</div>
+  <div class="topknapper">
+    <button type="button" id="nyFil">Ny tom fil</button>
+    <button type="button" id="aabnFil">Åbn data.json</button>
+    <input type="file" id="filvaelger" accept=".json,application/json" hidden>
+    <button type="button" id="gemFil" class="primaer" disabled>Gem data.json</button>
+  </div>
+</header>
+
+<nav class="faner" role="tablist">
+  <button type="button" role="tab" id="faneSteder" aria-selected="true" aria-controls="panelSteder">Steder</button>
+  <button type="button" role="tab" id="faneIndst" aria-selected="false" aria-controls="panelIndst">Titel og indstillinger</button>
+</nav>
+
+<main class="layout" id="panelSteder" role="tabpanel" aria-labelledby="faneSteder">
+  <section class="venstre" aria-label="Steder">
+    <div class="soeg">
+      <label for="q" class="sr">Søg</label>
+      <input id="q" type="search" placeholder="Søg i titel, adresse, kategori …" autocomplete="off">
+      <button type="button" id="ny" class="primaer" disabled>+ Nyt sted</button>
+    </div>
+    <div class="filtre">
+      <label><input type="checkbox" id="kunUdenKoord"> Mangler koordinater</label>
+      <label><input type="checkbox" id="kunAendret"> Kun ændrede</label>
+      <select id="sortering" aria-label="Sortering">
+        <option value="raekkefoelge">Rækkefølge</option>
+        <option value="titel">Titel</option>
+      </select>
+    </div>
+    <div class="antal" id="antal" aria-live="polite"></div>
+    <ul class="liste" id="liste"></ul>
+  </section>
+
+  <section class="hoejre" aria-label="Redigér">
+    <div class="tom" id="tom">
+      <p>Åbn <b>data.json</b> – eller tryk <b>Ny tom fil</b> for at starte forfra. Udfyld først <b>Titel og indstillinger</b>, og tilføj derefter steder med <b>+ Nyt sted</b>.</p>
+    </div>
+
+    <form id="form" hidden novalidate>
+      <h2 id="formTitel">Redigér sted</h2>
+      <p class="id" id="formId"></p>
+
+      <label>Titel <span class="kraevet">*</span> <input name="titel" required></label>
+      <label>Beskrivelse <textarea name="beskrivelse" rows="7"></textarea></label>
+      <label>Kategori <small>en eller flere, kommasepareret – fx Bager, Kirke</small> <input name="kategori"></label>
+
+      <div class="raekke">
+        <label class="bred">Adresse <input name="adresse" placeholder="Algade 12, Roskilde"></label>
+        <label>Periode <small>fri tekst – fx 1920–1965</small> <input name="periode"></label>
+      </div>
+
+      <div class="raekke">
+        <label class="bred">Koordinater <small>højreklik på stedet i Google Maps og klik på tallene</small>
+          <input name="koordinater" placeholder="55.641500, 12.080300">
+        </label>
+        <label class="flueben"><input type="checkbox" name="koordinat_ca"> Omtrentlig placering</label>
+      </div>
+
+      <label>Billede-URL <input name="billede_url" type="url" placeholder="https://…"></label>
+      <div class="billede" id="billede" hidden><img id="billedeImg" alt="Forhåndsvisning af billede"></div>
+      <label>Billedtekst / fotograf <input name="billede_tekst" placeholder="Foto: …"></label>
+      <label>Læs mere-link <input name="link_url" type="url" placeholder="https://…"></label>
+      <label>Lyd-URL (.mp3) <input name="lyd_url" type="url" placeholder="https://…"></label>
+
+      <ul class="fejl" id="fejl" hidden></ul>
+
+      <div class="formknapper">
+        <button type="submit" class="primaer">Gem ændringer</button>
+        <button type="button" id="fortryd">Fortryd</button>
+        <span class="flyt" id="flyt">
+          <button type="button" id="flytOp" title="Flyt et trin op i rækkefølgen">↑ Flyt op</button>
+          <button type="button" id="flytNed" title="Flyt et trin ned i rækkefølgen">↓ Flyt ned</button>
+        </span>
+        <button type="button" id="slet" class="farlig">Slet sted</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<section class="indst" id="panelIndst" role="tabpanel" aria-labelledby="faneIndst" hidden>
+  <h2>Titel og indstillinger</h2>
+  <p class="hjaelp">Det, der står her, vises øverst på siden. Tryk <b>Gem indstillinger</b> og derefter <b>Gem data.json</b>.</p>
+  <form id="indstForm" novalidate>
+    <label>Titel <span class="kraevet">*</span> <input name="titel" required placeholder="Byvandring i Roskilde"></label>
+    <label>Undertitel <small>en kort linje under titlen</small> <input name="undertitel"></label>
+    <label>Om projektet <small>vises når man trykker "Om" – fx baggrund, kilder og kontakt</small>
+      <textarea name="intro" rows="7"></textarea></label>
+    <div class="raekke">
+      <label>Accentfarve <input name="accentfarve" type="color" value="#2f6f5e"></label>
+      <label class="flueben"><input type="checkbox" name="rute"> Rute / byvandring <small>(stederne nummereres og forbindes i den rækkefølge, de står i)</small></label>
+    </div>
+    <div class="raekke">
+      <label class="bred">Startpunkt for kortet <small>bruges kun, når der ingen steder er endnu</small>
+        <input name="startpunkt" placeholder="55.641500, 12.080300"></label>
+      <label class="smal">Zoom <input name="startzoom" inputmode="numeric" placeholder="13"></label>
+    </div>
+    <ul class="fejl" id="indstFejl" hidden></ul>
+    <div class="formknapper">
+      <button type="submit" class="primaer">Gem indstillinger</button>
+    </div>
+  </form>
+</section>
+
+<div class="besked" id="besked" role="status" hidden></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

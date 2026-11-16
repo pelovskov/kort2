@@ -1,0 +1,124 @@
+:root{
+  --accent:#2f6f5e; --accent-tekst:#fff;
+  --bg:#f6f7f5; --flade:#ffffff; --tekst:#16181a; --daempet:#5f666c; --linje:#e3e6e3; --chip:#eef0ee;
+  --skygge:0 1px 2px rgba(16,24,20,.06),0 4px 16px rgba(16,24,20,.06);
+  --radius:14px; --fokus:#1f6fd1;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121414; --flade:#1b1e1e; --tekst:#eceeed; --daempet:#a2a9a6; --linje:#2c3130; --chip:#262a29;
+  --skygge:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25); --fokus:#7fb2ff;
+}}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tekst);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--fokus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Top */
+.hoved{background:var(--accent);color:var(--accent-tekst);padding:max(18px,env(safe-area-inset-top)) 20px 18px}
+.hoved-indre{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.hoved h1{margin:0;font-size:clamp(1.35rem,3.5vw,2rem);line-height:1.15;letter-spacing:-.01em;font-weight:700}
+.hoved p{margin:4px 0 0;opacity:.88;font-size:clamp(.9rem,2.2vw,1.05rem)}
+
+.knap{border:1px solid var(--linje);background:var(--flade);border-radius:999px;padding:7px 16px;cursor:pointer;font-weight:600;font-size:.92rem;white-space:nowrap}
+.knap:hover{border-color:var(--tekst)}
+.knap.lys{background:transparent;border-color:currentColor;color:inherit;opacity:.95}
+.knap.lys:hover{background:rgba(255,255,255,.12)}
+.knap.accent{background:var(--accent);border-color:var(--accent);color:var(--accent-tekst)}
+.knap:disabled{opacity:.4;cursor:default}
+
+.side{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+
+/* Søg + kategorier */
+.vaerktoej{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-bottom:14px}
+.soeg{position:relative;flex:1 1 260px;max-width:440px}
+.soeg svg{position:absolute;left:12px;top:50%;width:18px;height:18px;transform:translateY(-50%);fill:none;stroke:var(--daempet);stroke-width:2;stroke-linecap:round}
+.soeg input{width:100%;padding:10px 14px 10px 38px;border:1px solid var(--linje);border-radius:999px;background:var(--flade);font-size:1rem;box-shadow:var(--skygge)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips:empty{display:none}
+.chip{border:1px solid var(--linje);background:var(--flade);border-radius:999px;padding:5px 12px;font-size:.88rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-tekst)}
+.chip .n{opacity:.65;margin-left:5px;font-size:.85em}
+
+.visning{display:none}
+
+/* Liste + kort */
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start}
+.antal{margin:0 0 8px;color:var(--daempet);font-size:.9rem}
+.liste{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.liste button{all:unset;box-sizing:border-box;display:flex;gap:14px;align-items:flex-start;width:100%;padding:12px;cursor:pointer;
+  background:var(--flade);border:1px solid var(--linje);border-radius:var(--radius);box-shadow:var(--skygge);transition:border-color .15s,transform .15s}
+.liste button:hover{border-color:var(--accent)}
+.liste button:focus-visible{outline:3px solid var(--fokus);outline-offset:2px}
+.thumb{flex:0 0 76px;width:76px;height:76px;border-radius:10px;object-fit:cover;background:var(--chip)}
+.nr{flex:0 0 auto;display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-tekst);font-weight:700;font-size:.9rem}
+.liste .tekst{min-width:0;flex:1}
+.liste h3{margin:0;font-size:1.05rem;line-height:1.25}
+.liste .meta{margin:2px 0 0;color:var(--daempet);font-size:.88rem}
+.liste .uddrag{margin:4px 0 0;font-size:.92rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tom{padding:40px 20px;text-align:center;color:var(--daempet);background:var(--flade);border:1px dashed var(--linje);border-radius:var(--radius)}
+
+.kortwrap{position:sticky;top:16px;height:calc(100vh - 32px);max-height:820px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--skygge);border:1px solid var(--linje);background:var(--chip)}
+#map{width:100%;height:100%}
+.leaflet-container{font:inherit}
+.leaflet-tile-pane{filter:saturate(.6) contrast(.95) brightness(1.03)}   /* roligere kortfarver */
+@media (prefers-color-scheme:dark){.leaflet-tile-pane{filter:saturate(.5) brightness(.85)}}
+
+/* Markører */
+.pin{display:grid;place-items:center;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  background:var(--accent);border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.pin span{transform:rotate(45deg);color:var(--accent-tekst);font-weight:700;font-size:.8rem;line-height:1}
+.pin.prik{width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;transform:none}
+.pin.ca{opacity:.75;border-style:dashed}
+.klynge{display:grid;place-items:center;border-radius:50%;background:var(--accent);color:var(--accent-tekst);font-weight:700;
+  border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.klynge-s{width:34px;height:34px;margin:-17px 0 0 -17px;font-size:.9rem}
+.klynge-m{width:42px;height:42px;margin:-21px 0 0 -21px}
+.klynge-l{width:52px;height:52px;margin:-26px 0 0 -26px;font-size:1.1rem}
+
+/* Dialoger */
+dialog{border:none;padding:0;border-radius:18px;width:min(720px,94vw);max-height:92vh;background:var(--flade);color:var(--tekst);box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:auto}
+dialog::backdrop{background:rgba(10,14,12,.5);backdrop-filter:blur(2px)}
+.luk{position:sticky;float:right;top:10px;margin:10px 10px 0 0;z-index:2;width:38px;height:38px;border-radius:50%;border:none;background:rgba(0,0,0,.55);color:#fff;font-size:1.4rem;line-height:1;cursor:pointer}
+.d-billede{margin:0;background:var(--chip)}
+.d-billede img{width:100%;max-height:52vh;object-fit:contain;background:#000}
+.d-billede figcaption{padding:6px 20px;font-size:.82rem;color:var(--daempet)}
+.d-tekst-wrap{padding:18px 22px 22px;clear:both}
+.d-stop{margin:0 0 4px;color:var(--accent);font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+@media (prefers-color-scheme:dark){.d-stop{color:var(--tekst)}}
+dialog h2{margin:0;font-size:1.5rem;line-height:1.2}
+.d-meta{margin:4px 0 0;color:var(--daempet)}
+.d-tekst{white-space:pre-line;margin:14px 0 0;max-width:68ch}
+.d-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.d-tags span{background:var(--chip);border-radius:999px;padding:2px 10px;font-size:.82rem}
+dialog audio{width:100%;margin-top:14px}
+.d-knapper{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.d-rute{display:flex;justify-content:space-between;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--linje)}
+
+/* Tablet og telefon */
+@media (max-width:860px){
+  .side{padding:12px 12px 32px}
+  .hoved{padding:max(12px,env(safe-area-inset-top)) 14px 12px}
+  .vaerktoej{margin-bottom:8px}
+  .soeg{max-width:none}
+  .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px;padding:2px 12px 4px;scrollbar-width:none;width:calc(100% + 24px)}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto}
+  .visning{display:flex;position:sticky;top:0;z-index:600;background:var(--bg);margin:0 -12px 8px;padding:6px 12px}
+  .visning button{flex:1;padding:8px;border:1px solid var(--linje);background:var(--flade);font-weight:600;cursor:pointer}
+  .visning button:first-child{border-radius:999px 0 0 999px}
+  .visning button:last-child{border-radius:0 999px 999px 0;border-left:none}
+  .visning button[aria-pressed="true"]{background:var(--tekst);color:var(--bg);border-color:var(--tekst)}
+  .layout{grid-template-columns:1fr}
+  .layout[data-view="list"] .kortwrap{display:none}
+  .layout[data-view="map"] .listewrap{display:none}
+  .kortwrap{position:relative;top:0;height:calc(100dvh - 64px);max-height:none}
+  .thumb{flex-basis:64px;width:64px;height:64px}
+  dialog{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;border-radius:0}
+  .d-tekst-wrap{padding:14px 16px 24px}
+  dialog h2{font-size:1.3rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
