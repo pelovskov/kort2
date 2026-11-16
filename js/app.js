@@ -152,8 +152,18 @@ function tegnKort(res){
   layer.addLayers ? layer.addLayers(nye) : nye.forEach(m=>m.addTo(layer));
   const uden = res.filter(b=>b.lat===null).length;
   $("#mapnote").textContent = `${pts.length} på kortet` + (uden?`, ${uden} mangler placering`:"");
-  kortGraenser = pts.length ? L.latLngBounds(pts) : null;
+  kortGraenser = kerneOmraade(pts);
   tilpasKort();
+}
+// Ved mange butikker zoomes til området med de fleste (5 % yderst i hver
+// retning udelades), så enkelte butikker langt ude ikke giver et kort over
+// hele kommunen. De yderste kan stadig ses ved at zoome ud.
+function kerneOmraade(pts){
+  if (!pts.length) return null;
+  if (pts.length < 20) return L.latLngBounds(pts);
+  const kvantil = (arr, q) => arr[Math.min(arr.length-1, Math.max(0, Math.round(q*(arr.length-1))))];
+  const lats = pts.map(p=>p[0]).sort((a,b)=>a-b), lngs = pts.map(p=>p[1]).sort((a,b)=>a-b);
+  return L.latLngBounds([kvantil(lats,.05), kvantil(lngs,.05)], [kvantil(lats,.95), kvantil(lngs,.95)]);
 }
 // Zoom så alle viste markører er med. Er kortet skjult (fx Liste-visning på
 // telefon), gemmes det til kortet bliver vist – ellers bliver zoomen forkert.
